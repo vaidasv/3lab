@@ -8,7 +8,7 @@ namespace _3lab
         public string sureName { get; set; }
         public string name { get; set; }
 
-        public List <double> hw { get; set; }
+        public List<double> hw { get; set; }
 
         public double finalAvg { get; set; }
 
@@ -17,13 +17,13 @@ namespace _3lab
         public double examResult { get; set; }
         public object Set { get; set; }
 
-        public Student() {}
+        public Student() { }
         public Student(string sureName, string name, List<double> hw)
         {
             this.sureName = sureName;
             this.name = name;
             this.hw = hw;
-       
+
         }
         public Student(string sureName, string name, List<double> hw, double finalAvg, double finalMed, double examResult)
         {
@@ -33,39 +33,47 @@ namespace _3lab
             this.finalAvg = finalAvg;
             this.finalMed = finalMed;
         }
-
         public void addStudentGrades(List<Student> studList)
         {
             int studentID;
             int n;
             Console.Write("enter id of the student to add grades: ");
             studentID = int.Parse(Console.ReadLine());
-            //Console.Write("enter number of homework: ");
-            // n = int.Parse(Console.ReadLine());
-            studList[studentID].hw.Add(3);
+            Console.Write("enter number of homework: ");
+            n = int.Parse(Console.ReadLine());
+
             /*
+            studList[studentID].hw.Add(3);
+            studList[studentID].hw.Add(4);
+            studList[studentID].hw.Add(1);
+            studList[studentID].hw.Add(1);
+            studList[studentID].hw.Add(8);
+            studList[studentID].hw.Add(3);
+           */
+
             for (int i = 0; i < n; i++)
             {
                 int hwNum = i + 1;
                 Console.Write("enter homeworks " + hwNum + " grade: ");
                 studList[studentID].hw.Add(double.Parse(Console.ReadLine()));
             }
-            */
 
+            Console.Write("enter exam result: ");
+            studList[studentID].examResult = double.Parse(Console.ReadLine());
 
-
-
-            //  Console.Write("enter exam result: ");
-            // examResult = double.Parse(Console.ReadLine());
+            calculateAverage(studList, studentID);
+            calculateMedian(studList, studentID);
 
         }
-        public void printList(List<Student> studList)
+        public void printListWithHw(List<Student> studList)
         {
             int hwListSize;
             int index = 0;
             foreach (var student in studList)
             {
-                Console.WriteLine("{0} {1}",  "id: " +  index + " " + student.name, student.sureName, student + " " );
+                Console.WriteLine("studID: " + index);
+                Console.WriteLine("{0} {1}", student.name, student.sureName, student + " ");
+                
                 hwListSize = student.hw.Count;
                 index++;
                 //printina visus homework
@@ -73,25 +81,33 @@ namespace _3lab
                 {
                     for (int i = 0; i < hwListSize; i++)
                     {
-                        
-                        Console.WriteLine("hw "+ i + ":" + " " +student.hw[i] + " ");
+
+                        Console.WriteLine("hw " + i + ": " + student.hw[i]);
                     }
-                    Console.WriteLine();
+
                 }
+                Console.WriteLine("examRes: " + student.examResult);
+                Console.WriteLine("FinalAvg: " + student.finalAvg);
+                Console.WriteLine("FinalMed: " + student.finalMed);
+                Console.WriteLine("---------------------------------");
             }
         }
-    public void calculateMedian(int n) 
+        public void calculateMedian(List<Student> studList, int studentID)
         {
-            double finalMed;
+
             //calc hw median
-            double[] sortedHw = new double[n];
+            //double[] sortedHw = new double[n];
+            List<double> sortedHw = new List<double>();
+            int n = studList[studentID].hw.Count;
             for (int i = 0; i < n; i++)
             {
+                sortedHw.Add(studList[studentID].hw[i]);
                 //sortedHw[i] = hw[i];
             }
-            Array.Sort(sortedHw);
-
-            /* print sorted array
+            // Array.Sort(sortedHw);
+            sortedHw.Sort();
+            // print sorted array
+            /*
              for (int i = 0; i < n; i++)
              {
                  Console.WriteLine("hw : " + sortedHw[i]);
@@ -104,7 +120,7 @@ namespace _3lab
             {
                 middleArrayIndex = (int)(n / 2 + 0.5);
                 median = sortedHw[Convert.ToInt32(middleArrayIndex)];
-                Console.WriteLine("middle array index : " + middleArrayIndex);
+                //Console.WriteLine("middle array index : " + middleArrayIndex);
             }
             if (n % 2 == 0) // jei lyginis skaicius hw medianos liste
             {
@@ -114,67 +130,96 @@ namespace _3lab
                 //didesne vidurio reiksme
                 middleArrayIndex = (int)(n / 2 - 0.5);
                 median = (median + sortedHw[Convert.ToInt32(middleArrayIndex)]) / 2;
-               // Console.WriteLine("middle array index : " + middleArrayIndex);
+                // Console.WriteLine("middle array index : " + middleArrayIndex);
 
             }
-            finalMed = Math.Round((0.3 * median + 0.7 * examResult), 2, MidpointRounding.AwayFromZero);
+
+            studList[studentID].finalMed = Math.Round((0.3 * median + 0.7 * studList[studentID].examResult), 2, MidpointRounding.AwayFromZero);
+
             //Console.WriteLine("final median student grade = " + finalMed);
             //Console.WriteLine("median: " + median );   
             // hw median gautas
         }
-        public void calculateAverage(int n) 
+        public void calculateAverage(List<Student> studList, int studentID)
         {
-            double finalAvg;
+
             double hwAvg = 0.00;
+            int n = studList[studentID].hw.Count;
+
+
             for (int i = 0; i < n; i++)
             {
-                int hwNum = i + 1;
-                Console.WriteLine("enter homeworks " + hwNum + " grade: ");
-              //  hw[i] = double.Parse(Console.ReadLine());
-                //hwAvg = hwAvg + hw[i];
+                hwAvg = hwAvg + studList[studentID].hw[i];
             }
             hwAvg = hwAvg / n;
-            finalAvg = Math.Round((0.3 * hwAvg + 0.7 * examResult), 2, MidpointRounding.AwayFromZero);
-            //Console.WriteLine("final average student grade = " + finalAvg);
-        }
+            
+            studList[studentID].finalAvg = Math.Round((0.3 * hwAvg + 0.7 * studList[studentID].examResult), 2, MidpointRounding.AwayFromZero);
 
-        public void addStudent(List<Student> studentList )
+             //Console.WriteLine("final average student grade = " + finalAvg);
+        }
+        public void addStudent(List<Student> studentList)
         {
             string sureName;
             string name;
             List<double> hw = new List<double>();
-            
+
             Console.Write("enter surename: ");
             sureName = Console.ReadLine();
 
             Console.Write("enter name: ");
             name = Console.ReadLine();
-            
-            
+
+
 
             Student student = new Student(sureName, name, hw);
             studentList.Add(student);
 
         }
-
-        public void printStudentList(List<Student> studentList)
+        public void printStudentListAvg(List<Student> studentList)
         {
-            foreach (var stud in studentList)
+            Console.WriteLine("Surename        Name        Final Points (Med.)");
+            Console.WriteLine("-----------------------------------------------");
+            foreach (var student in studentList)
             {
-                Console.WriteLine(stud);
+                Console.WriteLine("{0} {1} {2}", student.sureName, student.name, student.finalAvg + " ");
             }
         }
+        public void printStudentListMedian(List<Student> studentList)
+        {
+            //8 whitespaces between 
+            Console.WriteLine("Surename        Name        Final Points (Med.)");
+            Console.WriteLine("-----------------------------------------------");
+            foreach (var student in studentList)
+            {
+                Console.WriteLine("{0} {1} {2}", student.sureName, student.name, student.finalMed + " ");
+            }
+        }
+        public void generateRandomResults(List<Student> studList)
+        {
+            int randomNum;
+            Random rnd = new Random();
+            int studentID;
+            
+            Console.Write("enter id of the student to add grades: ");
+            studentID = int.Parse(Console.ReadLine());
 
-     //     public override string ToString()
-       // {              
-         //       return  "name: " + name + " surename: " + sureName + " hw 0: " + hw[0]  /*" exam result:  " + examResult + " Final points (Avg. ): " + finalAvg*/;
-        //}
-  
+            studList[studentID].hw.Clear();
+
+            for (int i = 0; i < 5; i++)
+            {
+                randomNum = rnd.Next(1, 10);
+                studList[studentID].hw.Add(randomNum);
+                Console.WriteLine("Random hw res: " + randomNum );
+            }
+
+            studList[studentID].examResult = rnd.Next(1, 10);
+            Console.WriteLine("random exam result: " + studList[studentID].examResult);
+            calculateAverage(studList,studentID);
+            calculateMedian(studList, studentID);
+        }
+
     }
 
-
-
-    
     class Program
     {
         static void Main(string[] args)
@@ -185,19 +230,25 @@ namespace _3lab
             List<Student> studentList = new List<Student>();
             List<double> hw1 = new List<double>();
             List<double> hw2 = new List<double>();
+            List<double> hw3 = new List<double>();
             Student stud1 = new Student("Bronislovas","Bronius" , hw1);
-            Student stud2 = new Student("Cheslovenas", "Cheslovas", hw2);
+            Student stud2 = new Student("Frank", "Cola", hw2);
+            Student stud3 = new Student("Jay", "Z", hw3);
             studentList.Add(stud1);
             studentList.Add(stud2);
+            studentList.Add(stud3);
 
 
             do
             {
                 Console.WriteLine("0. Exit program");
                 Console.WriteLine("1. Add student to list");
-                Console.WriteLine("2. Print stud list");
+               // Console.WriteLine("2. Print stud list");
                 Console.WriteLine("3. Add student grades");
-                Console.WriteLine("4. Generate random exam/hw results for student"); 
+                Console.WriteLine("4. Print student list with homework and exam result");
+                Console.WriteLine("5. Print student list with avg points");
+                Console.WriteLine("6. Print student list with median points");
+                Console.WriteLine("7. Generate random student results");
 
 
                 caseSwitch = int.Parse(Console.ReadLine());
@@ -205,30 +256,41 @@ namespace _3lab
                 switch (caseSwitch)
                 {
                     case 1:
-                        Console.Clear();
+                      //  Console.Clear();
                         instance.addStudent(studentList);
                         Console.WriteLine();
                         caseSwitch = -1;
                         break;
-                    case 2:
-                        Console.Clear();
-                        instance.printStudentList(studentList);
-                        Console.WriteLine();
-                        caseSwitch = -1;
-                        break;
                     case 3:
-                        Console.Clear();
+                      //  Console.Clear();
                         instance.addStudentGrades(studentList);
                         Console.WriteLine();
                         caseSwitch = -1;
                         break;
                     case 4:
-                        Console.Clear();
-                        instance.printList(studentList);
+                        //Console.Clear();
+                        instance.printListWithHw(studentList);
                         Console.WriteLine();
                         caseSwitch = -1;
                         break;
-
+                    case 5:
+                       // Console.Clear();
+                        instance.printStudentListAvg(studentList);
+                        Console.WriteLine();
+                        caseSwitch = -1;
+                        break;
+                    case 6:
+                       // Console.Clear();
+                        instance.printStudentListMedian(studentList);
+                        Console.WriteLine();
+                        caseSwitch = -1;
+                        break;
+                    case 7:
+                       // Console.Clear();
+                        instance.generateRandomResults(studentList);
+                        Console.WriteLine();
+                        caseSwitch = -1;
+                        break;
 
                 }
 
