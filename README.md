@@ -1,7 +1,7 @@
 # 3.lab
 
 Release v0.1
-Fullfilled all requirements of v0.1 application
+- Fullfilled all requirements of v0.1 application
 
 Release v0.2
 - Added possibility to read from file and input to array.
